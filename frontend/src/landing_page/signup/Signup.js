@@ -1,6 +1,120 @@
+// import React, { useState } from "react";
+// import axios from "axios";
+// import { useNavigate } from "react-router-dom";
+// import "./Signup.css"; // Import styling
+
+// const SignupPage = () => {
+//   const [formData, setFormData] = useState({
+//     firstName: "",
+//     lastName: "",
+//     email: "",
+//     mobile: "",
+//     username: "",
+//     password: "",
+//   });
+
+//   const [error, setError] = useState("");
+//   const [loading, setLoading] = useState(false);
+
+//   const navigate = useNavigate();
+
+//   const handleChange = (e) => {
+//     const { name, value } = e.target;
+//     setFormData({
+//       ...formData,
+//       [name]: value,
+//     });
+//   };
+
+//   const handleSubmit = async (e) => {
+//     e.preventDefault();
+//     setLoading(true);
+//     setError("");
+
+//     try {
+//       const response = await axios.post(
+//         "http://localhost:3002/api/auth/signup",
+//         formData
+//       );
+//       alert(response.data.message);
+//       navigate("/"); // Redirect to HomePage after signup
+//     } catch (err) {
+//       setError(
+//         err.response?.data?.error || "Something went wrong during signup"
+//       );
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   return (
+//     <div className="signup-container">
+//       <h2>Signup</h2>
+//       <form onSubmit={handleSubmit} className="signup-form">
+//         {error && <div className="error-message">{error}</div>}
+
+//         <input
+//           type="text"
+//           name="firstName"
+//           placeholder="First Name"
+//           value={formData.firstName}
+//           onChange={handleChange}
+//           required
+//         />
+//         <input
+//           type="text"
+//           name="lastName"
+//           placeholder="Last Name"
+//           value={formData.lastName}
+//           onChange={handleChange}
+//           required
+//         />
+//         <input
+//           type="email"
+//           name="email"
+//           placeholder="Email"
+//           value={formData.email}
+//           onChange={handleChange}
+//           required
+//         />
+//         <input
+//           type="text"
+//           name="mobile"
+//           placeholder="Mobile"
+//           value={formData.mobile}
+//           onChange={handleChange}
+//           required
+//         />
+//         <input
+//           type="text"
+//           name="username"
+//           placeholder="Username"
+//           value={formData.username}
+//           onChange={handleChange}
+//           required
+//         />
+//         <input
+//           type="password"
+//           name="password"
+//           placeholder="Password"
+//           value={formData.password}
+//           onChange={handleChange}
+//           required
+//         />
+//         <button type="submit" disabled={loading} className="submit-btn">
+//           {loading ? "Signing up..." : "Signup"}
+//         </button>
+//       </form>
+//     </div>
+//   );
+// };
+
+// export default SignupPage;
+
 import React, { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom"; // useNavigate for React Router v6
+import { useNavigate } from "react-router-dom";
+import "./Signup.css"; // Import styling
 
 const SignupPage = () => {
   const [formData, setFormData] = useState({
@@ -15,7 +129,7 @@ const SignupPage = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const navigate = useNavigate(); // useNavigate for React Router v6
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -24,98 +138,85 @@ const SignupPage = () => {
       [name]: value,
     });
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError(""); // Reset error message before attempting signup
-
+    setError("");
+  
     try {
       const response = await axios.post(
-        "http://localhost:3002/signup", // Change this to your backend URL
+        "http://localhost:3002/api/auth/signup",
         formData
+        
       );
-
-      // After successful signup, redirect to the login page or dashboard
-      alert(response.data.message); // Display success message
-      navigate("/login"); // Use navigate to redirect to the login page
+  
+      alert("Signup successful! Redirecting to login...");
+      navigate("/login");  // Redirect to Login Page after successful signup
     } catch (err) {
-      setError(err.response ? err.response.data.message : "Error during signup");
+      setError(err.response?.data?.error || "Signup failed. Please try again.");
     } finally {
       setLoading(false);
     }
   };
-
+  
+  
   return (
     <div className="signup-container">
       <h2>Signup</h2>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className="signup-form">
         {error && <div className="error-message">{error}</div>}
-        <div className="form-group">
-          <label>First Name</label>
-          <input
-            type="text"
-            name="firstName"
-            value={formData.firstName}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label>Last Name</label>
-          <input
-            type="text"
-            name="lastName"
-            value={formData.lastName}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label>Email</label>
-          <input
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label>Mobile</label>
-          <input
-            type="text"
-            name="mobile"
-            value={formData.mobile}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label>Username</label>
-          <input
-            type="text"
-            name="username"
-            value={formData.username}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label>Password</label>
-          <input
-            type="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <button type="submit" disabled={loading}>
-            {loading ? "Signing up..." : "Signup"}
-          </button>
-        </div>
+
+        <input
+          type="text"
+          name="firstName"
+          placeholder="First Name"
+          value={formData.firstName}
+          onChange={handleChange}
+          required
+        />
+        <input
+          type="text"
+          name="lastName"
+          placeholder="Last Name"
+          value={formData.lastName}
+          onChange={handleChange}
+          required
+        />
+        <input
+          type="email"
+          name="email"
+          placeholder="Email"
+          value={formData.email}
+          onChange={handleChange}
+          required
+        />
+        <input
+          type="text"
+          name="mobile"
+          placeholder="Mobile"
+          value={formData.mobile}
+          onChange={handleChange}
+          required
+        />
+        <input
+          type="text"
+          name="username"
+          placeholder="Username"
+          value={formData.username}
+          onChange={handleChange}
+          required
+        />
+        <input
+          type="password"
+          name="password"
+          placeholder="Password"
+          value={formData.password}
+          onChange={handleChange}
+          required
+        />
+        <button type="submit" disabled={loading} className="submit-btn">
+          {loading ? "Signing up..." : "Signup"}
+        </button>
       </form>
     </div>
   );

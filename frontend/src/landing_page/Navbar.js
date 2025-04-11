@@ -7,7 +7,7 @@ function Navbar() {
       <nav class="navbar navbar-expand-lg  border-bottom"  style={{backgroundColor:"#fff"}}>
         <div class="container p-2">
           <Link class="navbar-brand" to="/">
-            <img src="media/images/logo.svg" style={{width:"25%"}} alt="logo"/>
+            <img src="media/images/GrowMore.jpeg" style={{width:"20%", height:"auto"}} alt="logo"/>
           </Link>
           <button
             class="navbar-toggler"
@@ -27,6 +27,11 @@ function Navbar() {
               <li class="nav-item">
                 <Link class="nav-link active" aria-current="page" to="/signup">
                   Signup
+                </Link>
+              </li>
+              <li class="nav-item">
+                <Link class="nav-link active" aria-current="page" to="/login">
+                  Login
                 </Link>
               </li>
               <li class="nav-item">

@@ -2,22 +2,46 @@ require("dotenv").config();
 
 const express = require("express");
 const mongoose = require("mongoose");
-const bodyParser = require("body-parser");
 const cors = require("cors");
-const path = require('path');
+const path = require("path");
 
-const { HoldingsModel } = require(path.resolve(__dirname, './model/HoldingsModel'));
-const { PositionsModel } = require(path.resolve(__dirname, './model/PositionsModel'));
-const { OrdersModel } = require(path.resolve(__dirname, './model/OrdersModel'));
+// Importing Models
+const User = require("./models/User");
+const { HoldingsModel } = require("./models/HoldingsModel");
+const { PositionsModel } = require("./models/PositionsModel");
+const { OrdersModel } = require("./models/OrdersModel");
 
-
-const PORT = process.env.PORT || 3002;
-const uri = process.env.MONGO_URL;
+// Import Routes
+const authRoutes = require("./routes/authRoutes");
 
 const app = express();
+const PORT = process.env.PORT || 3002;
+const MONGO_URI = process.env.MONGO_URL;
 
+// ✅ Middleware
 app.use(cors());
-app.use(bodyParser.json());
+app.use(express.json()); // Corrected - Replaces bodyParser.json()
+app.use(express.urlencoded({ extended: true })); // For handling form data
+
+// ✅ Routes
+app.use("/api/auth", authRoutes);
+
+// ✅ Connect to MongoDB and Start Server
+mongoose
+  .connect(MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => {
+    console.log("✅ MongoDB Connected");
+    app.listen(PORT, () => {
+      console.log(`🚀 Server running on http://localhost:${PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.error("❌ MongoDB Connection Error:", err);
+  });
+
 
 // app.get("/addHoldings", async (req, res) => {
 //   let tempHoldings = [
@@ -211,8 +235,78 @@ app.post("/newOrder", async (req, res) => {
   res.send("Order saved!");
 });
 
-app.listen(PORT, () => {
-  console.log("App started!");
-  mongoose.connect(uri);
-  console.log("DB started!");
-});
+// signup route
+// const User = require("./models/User"); // Import User model
+// const bcrypt = require("bcrypt");
+
+// app.post("/signup", async (req, res) => {
+//   try {
+//     const { firstName, lastName, email, mobile, username, password } = req.body;
+
+//     // Check if user already exists
+//     const existingUser = await User.findOne({ email });
+//     if (existingUser) {
+//       return res.status(400).json({ error: "Email already in use" });
+//     }
+
+//     // Hash password before saving
+//     const hashedPassword = await bcrypt.hash(password, 10);
+
+//     // Save new user
+//     const newUser = new User({
+//       firstName,
+//       lastName,
+//       email,
+//       mobile,
+//       username,
+//       password: hashedPassword,
+//     });
+
+//     await newUser.save();
+
+//     res.status(201).json({ message: "Signup successful!" });
+//   } catch (error) {
+//     res.status(500).json({ error: "Signup failed. Try again later." });
+//   }
+// });
+
+
+
+// // login route
+// app.post("/api/auth/login", async (req, res) => {
+//   try {
+//     const { username, password } = req.body;
+
+//     // Find user by username or email
+//     const user = await User.findOne({
+//       $or: [{ username }, { email: username }],
+//     });
+
+//     if (!user) {
+//       return res.status(400).json({ error: "User not found" });
+//     }
+
+//     // Check password
+//     const isMatch = await bcrypt.compare(password, user.password);
+//     if (!isMatch) {
+//       return res.status(400).json({ error: "Invalid password" });
+//     }
+
+//     // Generate JWT Token
+//     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
+//       expiresIn: "1h",
+//     });
+
+//     res.status(200).json({ message: "Login successful", token });
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).json({ error: "Server error" });
+//   }
+// });
+
+
+// app.listen(PORT, () => {
+//   console.log("App started!");
+//   mongoose.connect(uri);
+//   console.log("DB started!");
+// });
